@@ -23,5 +23,6 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path("login/", include("login.urls")),
+    path("home/", include("home.urls")),
     path("", RedirectView.as_view(url="/login/", permanent=True))
 ]
