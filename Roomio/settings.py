@@ -81,12 +81,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Roomio.wsgi.application'
 
 
-print(os.getenv("DB_NAME"))
-print(os.getenv("DB_USER"))
-print(os.getenv("DB_PASSWORD"))
-print(os.getenv("DB_HOST"))
-print(os.getenv("DB_PORT"))
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",

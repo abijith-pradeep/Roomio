@@ -48,3 +48,12 @@ class PetPolicy(models.Model):
 
     class Meta:
         unique_together = ('apartment_building', 'pet_type', 'pet_size')
+
+class Provides(models.Model):
+    amenity = models.ForeignKey(Amenities, on_delete=models.CASCADE)
+    building = models.ForeignKey(ApartmentBuilding, on_delete=models.CASCADE)
+    fee = models.IntegerField()
+    waiting_list = models.IntegerField()
+
+    class Meta:
+        unique_together = ('amenity', 'building')
