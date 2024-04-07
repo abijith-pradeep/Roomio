@@ -35,13 +35,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "login",
+    "apartment",
+    "user_profile",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "home",
 ]
+
+AUTH_USER_MODEL = 'login.User'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,7 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Roomio.urls'
+ROOT_URLCONF = 'login.urls'
 
 TEMPLATES = [
     {
@@ -74,6 +81,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Roomio.wsgi.application'
 
 
+print(os.getenv("DB_NAME"))
+print(os.getenv("DB_USER"))
+print(os.getenv("DB_PASSWORD"))
+print(os.getenv("DB_HOST"))
+print(os.getenv("DB_PORT"))
 
 DATABASES = {
     "default": {

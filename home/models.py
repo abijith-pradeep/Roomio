@@ -1,4 +1,7 @@
 from django.db import models
+from apartment.models import ApartmentUnit
+from login.models import User
+
 
 class Interest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
