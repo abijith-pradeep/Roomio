@@ -1,6 +1,8 @@
 
-# Roomio
- 
+# Roomio 
+Affan Khamse (ak10529) & Abijith Pradeep (ap8246) 
+
+
 ## Project Setup Instructions
 
 This guide will walk you through setting up a Python virtual environment and installing the necessary dependencies for your project.
