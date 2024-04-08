@@ -11,11 +11,17 @@
     <h1>User Interests</h1>
     <ul>
         {% for interest in interests %}
+        <br>
             <li>
-                User: {{ interest.user.username }} - 
-                Interested in: {{ interest.unit.unit_number }} - 
-                Move-in Date: {{ interest.move_in_date }} - 
-                Roommates: {{ interest.roommate_count }}
+                
+                <strong>User:</strong> {{ interest.user.username }} <br>
+                <strong>Interested in Unit Number:</strong> {{ interest.unit.unit_number }} <br>
+                <strong>Unit Details:</strong> <br>
+                &emsp; Monthly Rent: ${{ interest.unit.monthly_rent }} <br>
+                &emsp; Square Footage: {{ interest.unit.square_footage }} sqft <br>
+                &emsp; Available Date For Move In: {{ interest.unit.available_date_for_move_in }} <br>
+                <strong>Move-in Date:</strong> {{ interest.move_in_date }} <br>
+                <strong>Roommates:</strong> {{ interest.roommate_count }}
             </li>
         {% empty %}
             <li>No interests found.</li>
