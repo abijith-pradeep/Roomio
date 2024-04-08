@@ -94,6 +94,8 @@ To manage your application's environment variables more securely and convenientl
 
 By following these steps, you ensure that your sensitive information and configuration are not hardcoded into your application's source code, providing an additional layer of security.
 
+The insert statements are provided in Important_notes.pdf
+
 # DB screenshot:
 ![image](https://github.com/abijith-pradeep/Roomio/assets/60337745/97e7adb8-6f3f-47d1-bb3e-1216f7f5b98d)
 
