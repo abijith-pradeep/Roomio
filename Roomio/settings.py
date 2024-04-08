@@ -80,10 +80,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Roomio.wsgi.application'
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 0eb7f1995c24cef8a67225131d9cad1a76bf6be5
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
