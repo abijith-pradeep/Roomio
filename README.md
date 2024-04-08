@@ -2,6 +2,25 @@
 # Roomio 
 Affan Khamse (ak10529) & Abijith Pradeep (ap8246) 
 
+pfrankl@nyu.edu 
+fz2244@nyu.edu 
+kz2555@nyu.edu
+
+ 
+Supabase: Invited the above emails to the Supabase organization for database access. 
+
+ 
+
+# Progress: 
+
+Completed Django project initialization 
+
+Integrated Supabase DB (for consistent work between team) 
+Completed on the Login page (Abijith) -> then user profile page (Abijith) 
+Started on Home page (Affan) -> shifting focus to apartment record creation form (Affan) 
+
+Note: UI still needs to be worked on 
+
 
 ## Project Setup Instructions
 
@@ -74,4 +93,22 @@ To manage your application's environment variables more securely and convenientl
    }
 
 By following these steps, you ensure that your sensitive information and configuration are not hardcoded into your application's source code, providing an additional layer of security.
+
+# DB screenshot:
+![image](https://github.com/abijith-pradeep/Roomio/assets/60337745/97e7adb8-6f3f-47d1-bb3e-1216f7f5b98d)
+
+![image](https://github.com/abijith-pradeep/Roomio/assets/60337745/f5aa4caa-241f-4e3e-968a-f074b77264b9)
+
+![image](https://github.com/abijith-pradeep/Roomio/assets/60337745/640810f9-df53-4824-a780-d9714ec4b41b)
+
+## List of tables:
+![image](https://github.com/abijith-pradeep/Roomio/assets/60337745/a4e80716-bff7-48a0-8e67-7fd336981365)
+
+## Homescreen only listing User interest from Interest Table, 
+![image](https://github.com/abijith-pradeep/Roomio/assets/60337745/7b23615e-0489-496e-88df-07633ede7c7c)
+
+## Login and Signup
+![image](https://github.com/abijith-pradeep/Roomio/assets/60337745/9278d2e5-fc14-4dd3-81dc-735b0e38d489)
+
+![image](https://github.com/abijith-pradeep/Roomio/assets/60337745/708fecdb-1bf7-4cb2-89a0-caebc261991b)
 
