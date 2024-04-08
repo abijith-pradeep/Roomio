@@ -1,5 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.db import transaction
+from django.template.response import TemplateResponse
 from django.http import HttpResponse
+from django.contrib.auth.views import LogoutView
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+import django
+from django.contrib.auth.hashers import make_password
+from .signals import user_signed_up, user_logged_in
+from django.contrib.auth import authenticate, logout, login
+from django.urls import reverse_lazy
+
 
 # Create your views here.
 
@@ -8,7 +20,7 @@ def index(request):
 
 def login_redirect(request):
     if request.user.is_authenticated:
-        return redirect("index")
+        return redirect("home")
     return render(request, "login/login.html")
 
 
@@ -19,7 +31,7 @@ def logout_view(request):
 
 def signup(request):
     if request.user.is_authenticated:
-        return redirect("index")
+        return redirect("home")
     return render(request, "login/signup.html")
 
 
@@ -40,7 +52,7 @@ def user_signup(request):
                 user = authenticate(request, username=username, password=password)
                 login(request, user)
                 return redirect(
-                    "index"
+                    "home"
                 )  # Redirect to login page after successful signup
             except Exception as e:
                 print(e)
@@ -66,7 +78,7 @@ def user_login(request):
             login(request, user)
             # user_logged_in(username, request)
             return redirect(
-                reverse("index")
+                reverse("home")
             )  # Replace 'dashboard' with the desired URL name
         else:
             # If authentication fails, display an error message
