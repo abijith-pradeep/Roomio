@@ -3,5 +3,8 @@ from django.http import HttpResponse
 
 # Create your views here.
 
-def index(request):
-    return HttpResponse("Hello User - HOME")
+from .models import Interest  # Adjust the import path based on your project structure
+
+def home_page(request):
+    interests = Interest.objects.all()  # Fetch all user interests
+    return render(request, 'home/home_page.html', {'interests': interests})

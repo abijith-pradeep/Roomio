@@ -1,0 +1,25 @@
+<!-- home/templates/home/home_page.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+<body>
+    <h1>User Interests</h1>
+    <ul>
+        {% for interest in interests %}
+            <li>
+                User: {{ interest.user.username }} - 
+                Interested in: {{ interest.unit.unit_number }} - 
+                Move-in Date: {{ interest.move_in_date }} - 
+                Roommates: {{ interest.roommate_count }}
+            </li>
+        {% empty %}
+            <li>No interests found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
