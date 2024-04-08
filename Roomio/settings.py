@@ -15,7 +15,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-print(os.getenv("DB_HOST"))
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -79,13 +79,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Roomio.wsgi.application'
-
-
-print(os.getenv("DB_NAME"))
-print(os.getenv("DB_USER"))
-print(os.getenv("DB_PASSWORD"))
-print(os.getenv("DB_HOST"))
-print(os.getenv("DB_PORT"))
 
 DATABASES = {
     "default": {
