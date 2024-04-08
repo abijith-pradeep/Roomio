@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'login.urls'
+ROOT_URLCONF = 'Roomio.urls'
 
 TEMPLATES = [
     {

@@ -26,5 +26,5 @@ urlpatterns = [
     path("home/", include("home.urls")),
     path("apartment/", include("apartment.urls")),
     path("user/", include("user_profile.urls")),
-    path("", RedirectView.as_view(url="/login/", permanent=True))
+    path("", RedirectView.as_view(url="login/", permanent=True))
 ]
