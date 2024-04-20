@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Maven+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        {% load static %}
+    <style>
+        .background {
+            background-color: #121212;
+            font-family: 'Inter', sans-serif;
+            color: white;
+        }
+
+        .default-btn {
+            border-radius: 30px;
+        }
+
+
+
+        /*DASHBOARD PAGE*/
+        .vibe-background{
+            height: 50vh;
+            text-align: center;
+        }
+
+        .vibe-loading{
+            background-color: black;
+            background-image: url("{% static 'dashboard/loading.gif' %}");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        .vibe-loaded{
+            background-image: url("{% static 'dashboard/gradient_rev.gif' %}");
+            background-size: cover;
+        }
+
+        #vibe-status {
+            transition: transform 0.3s ease-in-out;
+            transform-origin: center center;
+        }
+
+        .vibe-history-table {
+            border: 0.25px solid gainsboro;
+        }
+
+        .mood-happy { background-color: #FF5733 !important; }
+        .mood-sad { background-color: #3498DB !important; }
+        .mood-energetic { background-color: #F39C12 !important; }
+        .mood-calm { background-color: #2ECC71 !important; }
+        .mood-anxious { background-color: #9B59B6 !important; }
+        .mood-cheerful { background-color: #F1C40F !important; }
+        .mood-gloomy { background-color: #16A085 !important; }
+        .mood-content { background-color: #F39C12 !important; }
+        .mood-none { background-color: black; }
+
+        .vibe-history-cell {
+            margin: 2px;
+            width: 25px;
+            height: 25px;
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+
+        .decomposition-section {
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+        }
+
+        .decomposition-title {
+            color: #F1F1F1;
+            text-align: center;
+        }
+
+        .description-loaded {
+            background-color: black;
+            color: #E5E5EA;
+            text-align: justify;
+            height: 60vh;
+            overflow-y: auto;
+        }
+
+        .recentTracks-loaded {
+            background-color: black;
+        }
+
+        #topItemsCarousel .carousel-item {
+            height: 450px;
+            overflow-y: auto;
+        }
+
+        #recentTracksCarouselInner {
+            padding: 20px 20px 20px 20px;
+        }
+
+        .meter {
+            background-color: #404040;
+            height: 15px;
+            width: 100%;
+            margin-bottom: 10px;
+            border-radius: .25rem;
+        }
+
+        .meter-value {
+            background-color: #091c9b;
+            height: 15px; /* Make sure this is consistent with the .meter height if you want flat edges */
+            /* The width will be set inline based on the attribute value */
+            border-radius: .25rem; /* Optional: if you want rounded corners */
+            transition: width 0.6s ease; /* Optional: if you want a smooth transition for the bar loading */
+        }
+
+        .recent-track-vibe {
+            color: #d71696;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .thumb-up-container input,
+        .thumb-down-container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+        }
+
+        .thumb-up-container,
+        .thumb-down-container {
+        display: block;
+        position: relative;
+        cursor: pointer;
+        font-size: 25px;
+        user-select: none;
+        transition: 100ms;
+        }
+
+        .thumb-up-container .checkmark,
+        .thumb-down-container .checkmark {
+        top: 0;
+        left: 0;
+        height: 2em;
+        width: 2em;
+        transition: 100ms;
+        }
+
+        /* Thumbs up specific styles */
+        .thumb-up-container input:checked ~ .checkmark path {
+        fill: #1db954; /* Fill color for thumbs up */
+        stroke-width: 1.2;
+        stroke: #212121;
+        }
+
+        .thumb-up-container input:checked ~ .checkmark {
+        animation: like_401 400ms ease;
+        }
+
+        /* Thumbs down specific styles */
+        .thumb-down-container .checkmark path {
+            fill: none; /* No fill initially */
+            stroke-width: 1.3;
+            stroke: #FFFFFF; /* White stroke for outlined look */
+        }
+
+        /* When the container is checked, change the fill to red */
+        .thumb-down-container input:checked ~ .checkmark path {
+        fill: #FF3B30; /* Fill color for thumbs down when checked */
+        stroke: #212121; /* Stroke color remains white */
+        }
+
+        /* Apply the animation when the state changes to checked */
+        .thumb-down-container input:checked ~ .checkmark {
+        animation: like_401 400ms ease;
+        }
+
+        .thumb-up-container:hover,
+        .thumb-down-container:hover {
+        transform: scale(1.1);
+        }
+
+        /* Animation keyframes for thumbs up */
+        @keyframes like_401 {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
+        }
+
+        /* Animation keyframes for thumbs down */
+        @keyframes dislike_401 {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
+        }
+
+
+        /*DASHBOARD PAGE END*/
+
+        .navbar {
+            padding: 10px 15px; /* Adjust padding */
+        }
+
+        .navbar {
+            background-color: #1A1A1A; /* A darker shade for a sleek look */
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease; /* Smooth transition for background color */
+        }
+
+        .navbar:hover {
+            background-color: #2D2D2D; /* Slightly lighter on hover for interactive feel */
+        }
+
+        .navbar-brand {
+            color: #F1F1F1; /* Light color for brand for better visibility */
+            transition: color 0.3s ease; /* Smooth transition for color */
+            font-family: 'Maven Pro', sans-serif;
+        }
+
+
+        .nav-link, .navbar-toggler {
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .nav-link:hover, .navbar-toggler:hover {
+            transform: scale(1.02);
+            color: #E0E0E0; /* Lighter shade for hover */
+        }
+
+        .navbar-brand:hover {
+            color: #E1E1E1; /* Slightly change color on hover for interactive feel */
+        }
+
+        .navbar-toggler {
+            border: none;
+            color: #F1F1F1; /* Set color for the toggler icon */
+        }
+
+        .navbar-toggler:focus, .navbar-toggler:active {
+            box-shadow: none;
+            outline: none; /* Remove outline on focus for a cleaner look */
+        }
+
+        /* Additional style for navbar items */
+        .nav-item {
+            transition: transform 0.3s ease; /* Smooth transition for hover effect */
+        }
+
+        .nav-item:hover {
+            transform: scale(1.02); /* Slightly scale up navbar items on hover */
+        }
+
+        .nav-link {
+            color: #F1F1F1; /* Color for navbar links */
+            transition: color 0.3s ease; /* Smooth transition for color */
+        }
+
+        .nav-link:hover {
+            color: #E1E1E1; /* Slightly lighter color on hover for links */
+        }
+
+        /* Style for active nav item */
+        .nav-item.active .nav-link {
+            color: #C1C1C1; /* Different color for active nav link */
+        }
+
+
+    </style>
+
+</head>
+<body class="{% block body_class %}background-image{% endblock %}">
+    {% block navbar %}
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+            <div class="container-fluid">
+                <a class="nav-link {% if request.path == '/home/' %}active{% endif %}" href="{% url 'home:home' %}"><span class="navbar-brand mb-0 h1">Roomio</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                  <ul class="navbar-nav">
+                    <li class="nav-item">
+                      <a class="nav-link {% if request.path == '/home/' %}active{% endif %}" href="{% url 'home:home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Search</a>
+                      </li>
+                    <li class="nav-item">
+                            <a class="nav-link" href="{% url 'add_post:add_post' %}" id="add_post-tab">Add new post</a>
+                    </li>
+                  </ul>
+                  <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                          <li><a class="dropdown-item" href="{% url 'user_profile:home' %}">Profile</a></li>
+                          <li><a class="dropdown-item" href="{% url 'home:logout' %}">Log Out</a></li>
+                        </ul>
+                    </li>
+                  </ul>
+                </div>
+            </div>
+        </nav>
+
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+
+    <script>
+        window.addEventListener('load', () => {
+            const vibematchTab = document.getElementById('vibematch-tab');
+            if (vibematchTab) {
+                vibematchTab.addEventListener('click', function(event) {
+                    event.preventDefault();  // Prevent the default navigation
+    
+                    // First, check if the location has already been stored today
+                    fetch('/vibematch/check_location_stored/', {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.locationStored && 'geolocation' in navigator) {
+                            
+                            navigator.geolocation.getCurrentPosition(position => {
+                                storeLocation(position.coords.latitude, position.coords.longitude);
+                            }, () => {
+                                
+                                window.location.href = vibematchTab.href;
+                            });
+                        } else {
+                            
+                            window.location.href = vibematchTab.href;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        window.location.href = vibematchTab.href;  // Navigate even if there's an error
+                    });
+                });
+            }
+        });
+    
+        function storeLocation(latitude, longitude) {
+            fetch('/vibematch/store_location/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({latitude, longitude})
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Location stored successfully');
+                }
+            })
+            .catch(error => {
+                console.error('Error storing location:', error);
+            })
+            .finally(() => {
+                // Proceed to navigate after attempting to store location
+                window.location.href = document.getElementById('vibematch-tab').href;
+            });
+        }
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        </script>
+</body>
+</html>
