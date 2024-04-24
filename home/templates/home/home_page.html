@@ -4,23 +4,32 @@
 {% block body_class %}background{% endblock %}
 
 {% block content %}
-    <h1>User Interests</h1>
-    <ul>
+<div class="container mt-4">
+    <h1>Interest Posts</h1>
+    <div class="row">
         {% for interest in interests %}
-        <br>
-            <li>
-                
-                <strong>User:</strong> {{ interest.user.username }} <br>
-                <strong>Interested in Unit Number:</strong> {{ interest.unit.unit_number }} <br>
-                <strong>Unit Details:</strong> <br>
-                &emsp; Monthly Rent: ${{ interest.unit.monthly_rent }} <br>
-                &emsp; Square Footage: {{ interest.unit.square_footage }} sqft <br>
-                &emsp; Available Date For Move In: {{ interest.unit.available_date_for_move_in }} <br>
-                <strong>Move-in Date:</strong> {{ interest.move_in_date }} <br>
-                <strong>Roommates:</strong> {{ interest.roommate_count }}
-            </li>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Interest by {{ interest.user.username }}</h5>
+                    <p class="card-text">
+                         Unit: {{ interest.unit.unit_number }}<br>
+                        Address: {{ interest.unit.building.address_number }} {{ interest.unit.building.address_street }}, {{ interest.unit.building.address_city }}, {{ interest.unit.building.address_state }} {{ interest.unit.building.address_zip_code }}<br>
+                        Monthly Rent: ${{ interest.unit.monthly_rent }}<br>
+                        Square Footage: {{ interest.unit.square_footage }} sqft<br>
+                        Available Date for Move-In: {{ interest.unit.available_date_for_move_in }}<br>
+                        Move-in Date: {{ interest.move_in_date }}<br>
+                        Roommates: {{ interest.roommate_count }}
+                    </p>
+                    <button class="btn btn-success like-btn" data-interest="{{ interest.id }}">Like ({{ interest.total_likes }})</button>
+                    <button class="btn btn-danger dislike-btn" data-interest="{{ interest.id }}">Dislike ({{ interest.total_dislikes }})</button>
+                </div>
+            </div>
+        </div>
         {% empty %}
-            <li>No interests found.</li>
+        <p>No interests found.</p>
         {% endfor %}
-    </ul>
+    </div>
+</div>
 {% endblock %}
+
