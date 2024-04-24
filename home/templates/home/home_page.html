@@ -11,7 +11,7 @@
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Interest by {{ interest.user.username }}</h5>
+                    <h5 class="card-title">Interest by {{ interest.user.first_name  }} {{interest.user.last_name}}</h5>
                     <p class="card-text">
                          Unit: {{ interest.unit.unit_number }}<br>
                         Address: {{ interest.unit.building.address_number }} {{ interest.unit.building.address_street }}, {{ interest.unit.building.address_city }}, {{ interest.unit.building.address_state }} {{ interest.unit.building.address_zip_code }}<br>
