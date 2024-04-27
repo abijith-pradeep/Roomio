@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Unit Number: {{ unit.unit_number }}</h5>
+            <p class="card-text">
+                Monthly Rent: ${{ unit.monthly_rent }}
+            <br>
+                Square Footage: {{ unit.square_footage }} sqft<br>
+                Available Date for Move-In: {{ unit.available_date_for_move_in|date:"F j, Y" }}
+            <br>
+                Building: {{ unit.building.building_name }}
+            <br>
+                Company: {{ unit.building.company_name }}
+            <br>
+                Address: {{ unit.building.address_number }} {{ unit.building.address_street }}, 
+                {{ unit.building.address_city }}, 
+                {{ unit.building.address_state }} 
+                {{ unit.building.address_zip_code }}
+
+            </p>
+            <p class="card-text">
+                Pet Policy:
+                {% for policy in pet_policies %}
+                    <br>
+                    Pet Type: {{ policy.pet_type }}
+                    Pet Size: {{ policy.pet_size }}
+                    Allowed: {% if policy.allowed %}Yes{% else %}No{% endif %}
+                    {% if policy.allowed %}
+                        Registration Fee: ${{ policy.registration_fee }}
+                        Monthly Fee: ${{ policy.monthly_fee }}
+                    {% endif %}
+            {% endfor %}
+            </p>
+    </div>
+</div>
+</div>
+{% endblock %}

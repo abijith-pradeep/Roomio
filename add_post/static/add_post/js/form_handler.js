@@ -1,8 +1,16 @@
 function addBedroomField() {
     const container = document.getElementById('bedroomContainer');
+    const bedroomNumber = container.querySelectorAll('input').length + 1;
+
+    const newLabel = document.createElement('label')
+    newLabel.htmlFor = 'bedroom' + bedroomNumber;
+    newLabel.textContent = 'Bedroom ' + bedroomNumber + ':';
+    container.appendChild(newLabel)
+    
     const newBedroom = document.createElement('input');
     newBedroom.type = 'text';
-    newBedroom.name = 'bedroom' + (container.children.length / 2 + 1);
+    newBedroom.id = 'bedroom' + bedroomNumber;
+    newBedroom.name = 'bedroom' + bedroomNumber;
     newBedroom.className = 'bedroom-input';
     container.appendChild(newBedroom);
 }

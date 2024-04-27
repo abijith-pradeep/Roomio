@@ -25,19 +25,23 @@ class InterestForm(forms.ModelForm):
     address_number = forms.IntegerField(label='Block Number')
     address_street = forms.CharField(max_length=50, label="Street Number")
     address_city = forms.CharField(max_length=50, label="City")
-    address_sate = forms.CharField(max_length=50, label="State")
+    address_state = forms.CharField(max_length=50, label="State")
     address_zip = forms.IntegerField(label="Zipcode")
     year_built = forms.IntegerField(label="Year Built")
 
     unit_number = forms.CharField(max_length=50, label='Unit Number')
+    monthly_rent = forms.IntegerField(label="Monthly Rent")
+    square_footage = forms.IntegerField(label="Square footage")
+    available_date_for_movein = forms.DateTimeField(label="Avilable date for move in")
     
 
 
-    pet_policy = forms.ModelChoiceField(
+    pet_policy = forms.ModelMultipleChoiceField(
         queryset=PetPolicy.objects.all(),
         required=False,
         label='Pet Policy'
     )
+    
     amenities = forms.ModelMultipleChoiceField(
         queryset=Amenities.objects.all(),
         widget=forms.CheckboxSelectMultiple,

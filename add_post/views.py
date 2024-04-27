@@ -5,11 +5,9 @@ from .models import ApartmentBuilding, ApartmentUnit
 # Create your views here.
 
 def home_page(request):
-    interestForm = InterestForm()
-    
-
+    form = InterestForm()
     context = {
-            "interestForm": interestForm,
+            "interestForm": form,
         }
     return render(request, 'add_post/add_post_page.html', context )
 
@@ -52,8 +50,8 @@ def add_interest(request):
                 interest.unit = unit
 
             interest.save()
-            form.save_m2m()  # Save many-to-many relationships
+            form.save_m2m()  
             return redirect('home:home')
     else:
         form = InterestForm()
-    return render(request, 'add_post_page.html', {'form': form})
+    return render(request, 'add_post/add_post_page.html', {'form': form})

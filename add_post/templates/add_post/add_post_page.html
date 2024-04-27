@@ -2,45 +2,80 @@
 {% load static %}
 {% block content %}
 
-
 <div class="container">
-    
-
     <h1>Add New Interest</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
 
         <div id="companyNameDropDown">
+            <label for="id_company_name">Company Name:</label>
             {{ interestForm.company_name }}
-        </div>    
+        </div>
         <div id="buildingNameDropDown">
+            <label for="id_building_name">Building Name:</label>
             {{ interestForm.building_name }}
         </div>
-        
-        
+
         <div id="newCompanyName" style="display: none;">
+            <label for="id_new_company_name">New Company Name:</label>
             {{ interestForm.new_company_name }}
-            
         </div>
         <div id="newBuildingName" style="display: none;">
-            
+            <label for="id_new_building_name">New Building Name:</label>
             {{ interestForm.new_building_name }}
+
+            <label for="id_address_number">Block Number:</label>
+            {{ interestForm.address_number }}
+
+            <label for="id_address_street">Street Number:</label>
+            {{ interestForm.address_street }}
+
+            <label for="id_address_city">City:</label>
+            {{ interestForm.address_city }}
+
+            <label for="id_address_state">State:</label>
+            {{ interestForm.address_state }}
+
+            <label for="id_address_zip">Zipcode:</label>
+            {{ interestForm.address_zip }}
+
+            <label for="id_year_built">Year Built:</label>
+            {{ interestForm.year_built }}
         </div>
 
-
-        <div id="bedroomContainer">
-            <label for="bedrooms">Bedrooms:</label>
-            <input type="text" name="bedroom1" id="bedroom1" class="bedroom-input">
-            <button type="button" onclick="addBedroomField()">+</button>
-        </div>
         <div class="unit_detail">
-            
+            <label for="id_unit_number">Unit Number:</label>
+            {{ interestForm.unit_number }}
+
+            <label for="id_monthly_rent">Monthly Rent:</label>
+            {{ interestForm.monthly_rent }}
+
+            <label for="id_square_footage">Square Footage:</label>
+            {{ interestForm.square_footage }}
+
+            <label for="id_available_date_for_movein">Available Date for Move-In:</label>
+            {{ interestForm.available_date_for_movein }}
+
+            <div id="bedroomContainer">
+                <label for="bedroom1">Bedroom 1:</label>
+                <input type="text" name="bedroom1" id="bedroom1" class="bedroom-input">
+                <button type="button" onclick="addBedroomField()">+</button>
+            </div>
         </div>
+
+        <div class="pet_policy">
+            <label for="id_pet_policy">Pet Policy:</label>
+            {{ interestForm.pet_policy }}
+        </div>
+
+        <div class="amenities">
+            <label for="id_amenities">Amenities:</label>
+            {{ interestForm.amenities }}
+        </div>
+
         <input type="submit" value="Submit">
     </form>
 </div>
 <script src="{% static 'add_post/js/form_handler.js' %}"></script>
-
 
 {% endblock content %}

@@ -23,6 +23,10 @@
                     </p>
                     <button class="btn btn-success like-btn" data-interest="{{ interest.id }}">Like ({{ interest.total_likes }})</button>
                     <button class="btn btn-danger dislike-btn" data-interest="{{ interest.id }}">Dislike ({{ interest.total_dislikes }})</button>
+                    <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' interest.unit.id %}'">More Details</button>
+
+
+
                 </div>
             </div>
         </div>

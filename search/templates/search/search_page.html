@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_class %}background{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Search Apartment Units</h1>
+    <form method="post" class="mb-4">
+        {% csrf_token %}
+        <div id="search_bar">
+            {{ searchForm.as_p }}
+        </div>
+        <input type="submit" value="Search" class="btn btn-primary">
+    </form>
+
+    {% if units %}
+    <div class="row">
+        {% for unit in units %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Unit Number: {{ unit.unit_number }}</h5>
+                    <p class="card-text">
+                        Monthly Rent: ${{ unit.monthly_rent }}
+                    <br>Square Footage: {{ unit.square_footage }} sqft<br>
+                        Available Date for Move-In: {{ unit.available_date_for_move_in|date:"F j, Y" }}
+
+                    {% if unit.building %}
+                        <br>Building: {{ unit.building.building_name }}
+                        <br>Company: {{ unit.building.company_name }}
+                        <br>Address: {{ unit.building.address_number }} {{ unit.building.address_street }}, 
+                            {{ unit.building.address_city }}, 
+                            {{ unit.building.address_state }} 
+                            {{ unit.building.address_zip_code }}
+                    {% endif %}
+                </p>
+                <!-- Example button for future functionality -->
+                <button class="btn btn-primary">More Details</button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+    <p>No apartment units found.</p>
+{% endif %}
+
+{% endblock %}
