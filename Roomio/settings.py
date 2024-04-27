@@ -36,7 +36,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "login",
-    "apartment",
     "user_profile",
     'django.contrib.admin',
     'django.contrib.auth',
@@ -112,6 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SESSION_ENGINE = "django.contrib.sessions.backends.db" 
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

@@ -1,6 +1,6 @@
 from django import forms
 from .models import User as user 
-from django.contrib.auth.models import User
+from login.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
 
