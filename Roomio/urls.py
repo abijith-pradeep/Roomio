@@ -24,7 +24,6 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
     path("login/", include("login.urls")),
     path("home/", include("home.urls")),
-    path("apartment/", include("apartment.urls")),
     path("user_profile/", include("user_profile.urls")),
     path("add_post/", include("add_post.urls")),
     path("", RedirectView.as_view(url="login/", permanent=True))

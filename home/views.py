@@ -37,4 +37,4 @@ def dislike_interest(request, interest_id):
 def logout(request):
     # Clear Django session data
     request.session.clear()
-    return redirect("login:index")
+    return redirect("login:login")

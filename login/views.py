@@ -7,6 +7,7 @@ from django.contrib.auth.views import LogoutView
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 import django
+from .forms import UserSignUpForm
 from django.contrib.auth.hashers import make_password
 from .signals import user_signed_up, user_logged_in
 from django.contrib.auth import authenticate, logout, login
@@ -20,7 +21,7 @@ def index(request):
 
 def login_redirect(request):
     if request.user.is_authenticated:
-        return redirect("home")
+        return redirect("home:home")
     return render(request, "login/login.html")
 
 
@@ -31,7 +32,7 @@ def logout_view(request):
 
 def signup(request):
     if request.user.is_authenticated:
-        return redirect("home")
+        return redirect("home:home")
     return render(request, "login/signup.html")
 
 
@@ -52,7 +53,7 @@ def user_signup(request):
                 user = authenticate(request, username=username, password=password)
                 login(request, user)
                 return redirect(
-                    "home"
+                    "home:home"
                 )  # Redirect to login page after successful signup
             except Exception as e:
                 print(e)
@@ -74,11 +75,12 @@ def user_login(request):
         username = form_data.get("username")
         password = form_data.get("password")
         user = authenticate(request, username=username, password=password)
+        print(user)
         if user is not None:
             login(request, user)
             # user_logged_in(username, request)
             return redirect(
-                reverse("home")
+                "home:home"
             )  # Replace 'dashboard' with the desired URL name
         else:
             # If authentication fails, display an error message

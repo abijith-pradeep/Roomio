@@ -28,10 +28,13 @@
   <body>
     <div class="container">
       <div class="login-container">
-        <form class="login-form" method="post" action="/userLogin/">
+        <form class="login-form" method="post" action="{%url 'login:userLogin'%}">
           {% csrf_token %}
           <h1 style="color: rgb(0, 0, 0);">Roomio</h1>
           <p>Please login to your account</p>
+          {% if error_message %}
+                    <div class="alert alert-danger">{{ error_message }}</div>
+          {% endif %}
           <div class="input-group">
             <input type="text" id="username" name="username" placeholder="Username" required>
           </div>
@@ -40,7 +43,7 @@
           </div>
           <button type="submit">Login</button>
           <div class="bottom-text">
-            <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+            <p>Don't have an account? <a href="{% url 'login:signup' %}">Sign Up</a></p>
           </div>
         </form>
       </div>
