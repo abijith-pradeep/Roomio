@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="user">
+    <p>{{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>  <!-- Display user's email -->
+    <p>Member since: {{ user.date_joined|date:"Y-m-d" }}</p>  <!-- Formatting the date -->
+</div>
+
+{% if pets %}
+    <h2>Your Pets</h2>
+    <ul>
+        {% for pet in pets %}
+            <li>
+                <strong>{{ pet.pet_name }}</strong> ({{ pet.pet_type }} - {{ pet.pet_size }})
+                <!-- Optional: Link to edit pet -->
+                <a href="{% url 'user_profile:edit_pet' pet.id %}">Edit</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You have no pets registered.</p>
+{% endif %}
+
+<!-- Link to register a new pet -->
+<a href="{% url 'user_profile:register_pet' %}" class="btn btn-primary">Register New Pet</a>
+
+{% endblock %}

@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
+  {% if  messages%}
+  <div class="messages">
+    {% for message in messages %}
+    <div class="{{message.tags}}" >
+        {{message}}
+        {{break}}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
   <h2>Register a new pet</h2>
   <form method="post">
     {% csrf_token %}
