@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if  messages%}
+  <div class="messages">
+    {% for message in messages %}
+    <div class="{{message.tags}}" >
+        {{message}}
+        {{break}}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <h2>Edit pet</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}

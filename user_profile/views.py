@@ -1,7 +1,64 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import PetForm
+from .models import Pet
 from django.http import HttpResponse
+from django.db import IntegrityError
+from django.contrib import messages
 
-# Create your views here.
+def userprofile(request):
+    if request.user.is_authenticated:
+        pets = Pet.objects.filter(owner=request.user)
+        context = {
+            'user': request.user,
+            'pets': pets
+        }
+        return render(request,"user_profile/user_profile.html",context)
 
-def index(request):
-    return HttpResponse("Hello User - HOME")
+
+@login_required
+def register_pet(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            form = PetForm(request.POST)
+            if form.is_valid():
+                try:
+                    pet = form.save(commit=False)
+                    pet.owner = request.user  # set the user to the current user
+                    pet.save()
+                    pets = Pet.objects.filter(owner=request.user)
+                    context = {
+                        'user': request.user,
+                        'pets': pets
+                    }
+                    return render(request,'user_profile/user_profile.html',context)
+                except IntegrityError:
+                    messages.error(request, "This pet already exists.")
+                except Exception as e:
+                    messages.error(request, f"Error registering pet: {str(e)}")
+            else:
+                messages.error(request, "Please correct the errors below.")
+            
+    else:
+        form = PetForm()
+    return render(request, 'user_profile/register_pet.html', {'form': form})
+
+@login_required
+def edit_pet(request, pet_id):
+    pet = Pet.objects.get(id=pet_id, owner=request.user)  # ensure user can only edit their own pets
+    if request.method == 'POST':
+        form = PetForm(request.POST, instance=pet)
+        if form.is_valid():
+            try:
+                pets = Pet.objects.filter(owner=request.user).filter(id=pet_id)
+                form.save()
+                return redirect('user_profile:home')
+            except IntegrityError:
+                messages.error(request, "This pet already exists.")
+            except Exception as e:
+                messages.error(request, f"Error registering pet: {str(e)}")
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = PetForm(instance=pet)
+    return render(request, 'user_profile/edit_pet.html', {'form': form})
