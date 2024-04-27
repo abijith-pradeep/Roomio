@@ -22,9 +22,17 @@ class InterestForm(forms.ModelForm):
 
     new_company_name = forms.CharField(max_length=100, required=False, label='New Company Name')
     new_building_name = forms.CharField(max_length=100, required=False, label='New Building Name')
+    address_number = forms.IntegerField(label='Block Number')
+    address_street = forms.CharField(max_length=50, label="Street Number")
+    address_city = forms.CharField(max_length=50, label="City")
+    address_sate = forms.CharField(max_length=50, label="State")
+    address_zip = forms.IntegerField(label="Zipcode")
+    year_built = forms.IntegerField(label="Year Built")
 
     unit_number = forms.CharField(max_length=50, label='Unit Number')
-    address = forms.CharField(max_length=255, label='Address')
+    
+
+
     pet_policy = forms.ModelChoiceField(
         queryset=PetPolicy.objects.all(),
         required=False,
