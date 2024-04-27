@@ -1,26 +1,42 @@
 {% extends 'base.html' %}
-
 {% load static %}
-{% block body_class %}background{% endblock %}
-
 {% block content %}
-    <h1>User Interests</h1>
-    <ul>
-        {% for interest in interests %}
-        <br>
-            <li>
-                
-                <strong>User:</strong> {{ interest.user.username }} <br>
-                <strong>Interested in Unit Number:</strong> {{ interest.unit.unit_number }} <br>
-                <strong>Unit Details:</strong> <br>
-                &emsp; Monthly Rent: ${{ interest.unit.monthly_rent }} <br>
-                &emsp; Square Footage: {{ interest.unit.square_footage }} sqft <br>
-                &emsp; Available Date For Move In: {{ interest.unit.available_date_for_move_in }} <br>
-                <strong>Move-in Date:</strong> {{ interest.move_in_date }} <br>
-                <strong>Roommates:</strong> {{ interest.roommate_count }}
-            </li>
-        {% empty %}
-            <li>No interests found.</li>
-        {% endfor %}
-    </ul>
-{% endblock %}
+
+
+<div class="container">
+    
+
+    <h1>Add New Interest</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div id="companyNameDropDown">
+            {{ interestForm.company_name }}
+        </div>    
+        <div id="buildingNameDropDown">
+            {{ interestForm.building_name }}
+        </div>
+        
+        
+        <div id="newBuildingFields" style="display: none;">
+            {{ interestForm.new_company_name }}
+            {{ interestForm.new_building_name }}
+        </div>
+
+
+        <div id="bedroomContainer">
+            <label for="bedrooms">Bedrooms:</label>
+            <input type="text" name="bedroom1" id="bedroom1" class="bedroom-input">
+            <button type="button" onclick="addBedroomField()">+</button>
+        </div>
+        <div class="unit_detail">
+            
+        </div>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+<script src="{% static 'add_post/js/form_handler.js' %}"></script>
+
+
+{% endblock content %}
