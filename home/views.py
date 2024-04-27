@@ -9,12 +9,16 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Interest  # Adjust the import path based on your project structure
 
+
 def home_page(request):
-    interests = Interest.objects.all()  # Fetch all user interests
-    return render(request, 'home/home_page.html', {'interests': interests})
+    if request.user.is_authenticated:
+        interests = Interest.objects.all()  # Fetch all user interests
+        return render(request, 'home/home_page.html', {'interests': interests})
+
+    else:
+        return redirect("login:login")
 
 
-@login_required
 def like_interest(request, interest_id):
     interest = get_object_or_404(Interest, id=interest_id)
     if request.user in interest.likes.all():
@@ -24,7 +28,7 @@ def like_interest(request, interest_id):
         interest.dislikes.remove(request.user)  # Ensure user cannot like and dislike simultaneously
     return JsonResponse({'success': True, 'likes': interest.total_likes()})
 
-@login_required
+
 def dislike_interest(request, interest_id):
     interest = get_object_or_404(Interest, id=interest_id)
     if request.user in interest.dislikes.all():
