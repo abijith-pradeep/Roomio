@@ -5,24 +5,21 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Interest Posts</h1>
+    <h1>Available Units</h1>
     <div class="row">
         {% for interest in interests %}
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Interest by {{ interest.user.first_name  }} {{interest.user.last_name}}</h5>
+                    <h5 class="card-title"></h5>
                     <p class="card-text">
-                         Unit: {{ interest.unit.unit_number }}<br>
+                        Unit: {{ interest.unit.unit_number }}<br>
                         Address: {{ interest.unit.building.address_number }} {{ interest.unit.building.address_street }}, {{ interest.unit.building.address_city }}, {{ interest.unit.building.address_state }} {{ interest.unit.building.address_zip_code }}<br>
                         Monthly Rent: ${{ interest.unit.monthly_rent }}<br>
                         Square Footage: {{ interest.unit.square_footage }} sqft<br>
                         Available Date for Move-In: {{ interest.unit.available_date_for_move_in }}<br>
-                        Move-in Date: {{ interest.move_in_date }}<br>
-                        Roommates: {{ interest.roommate_count }}
                     </p>
                     <button class="btn btn-success like-btn" data-interest="{{ interest.id }}">Like ({{ interest.total_likes }})</button>
-                    <button class="btn btn-danger dislike-btn" data-interest="{{ interest.id }}">Dislike ({{ interest.total_dislikes }})</button>
                     <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' interest.unit.id %}'">More Details</button>
 
 

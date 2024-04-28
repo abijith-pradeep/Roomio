@@ -24,24 +24,14 @@ def home_page(request):
         return redirect("login:login")
 
 
-def like_interest(request, interest_id):
-    interest = get_object_or_404(Interest, id=interest_id)
-    if request.user in interest.likes.all():
-        interest.likes.remove(request.user)
-    else:
-        interest.likes.add(request.user)
-        interest.dislikes.remove(request.user)  # Ensure user cannot like and dislike simultaneously
-    return JsonResponse({'success': True, 'likes': interest.total_likes()})
-
-
-def dislike_interest(request, interest_id):
-    interest = get_object_or_404(Interest, id=interest_id)
-    if request.user in interest.dislikes.all():
-        interest.dislikes.remove(request.user)
-    else:
-        interest.dislikes.add(request.user)
-        interest.likes.remove(request.user)  # Ensure user cannot like and dislike simultaneously
-    return JsonResponse({'success': True, 'dislikes': interest.total_dislikes()})
+def like_interest(request):
+    interest_id = request.POST.get('interest_id')
+    try:
+        interest = Interest.objects.get(id=interest_id)
+        interest.like()  # Calls the like method to increment the like count
+        return JsonResponse({'status': 'success', 'total_likes': interest.total_likes})
+    except Interest.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Interest not found'}, status=404)
 
 def logout(request):
     # Clear Django session data
