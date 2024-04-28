@@ -34,6 +34,15 @@
                     {% endif %}
             {% endfor %}
             </p>
+
+            {% for interest in other_interests %}
+            <p>Interest by: {{ interest.user.first_name }} {{ interest.user.last_name }}</p>
+            <p>Move-in Date: {{ interest.move_in_date }}</p>
+            <p>Roommate Count: {{ interest.roommate_count }}</p>
+            {% empty %}
+                <p>No other interests found for this unit.</p>
+            {% endfor %}
+            <button class="btn btn-primary" onclick="location.href='{% url 'home:create_interest' unit.id %}'">Create Interest</button>
     </div>
 </div>
 </div>

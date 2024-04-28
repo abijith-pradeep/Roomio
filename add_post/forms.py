@@ -3,7 +3,7 @@ from django import forms
 from .models import ApartmentBuilding, Amenities, ApartmentUnit, PetPolicy
 from home.models import Interest
 
-class InterestForm(forms.ModelForm):
+class Add_Post_Form(forms.ModelForm):
     class Meta:
         model = Interest
         fields = ['unit', 'move_in_date', 'roommate_count']
@@ -32,16 +32,15 @@ class InterestForm(forms.ModelForm):
     unit_number = forms.CharField(max_length=50, label='Unit Number')
     monthly_rent = forms.IntegerField(label="Monthly Rent")
     square_footage = forms.IntegerField(label="Square footage")
-    available_date_for_movein = forms.DateTimeField(label="Avilable date for move in")
+    available_date_for_movein = forms.DateTimeField(label="Avilable date for move")
     
 
 
-    pet_policy = forms.ModelMultipleChoiceField(
+    pet_policy = forms.ModelChoiceField(
         queryset=PetPolicy.objects.all(),
         required=False,
         label='Pet Policy'
     )
-    
     amenities = forms.ModelMultipleChoiceField(
         queryset=Amenities.objects.all(),
         widget=forms.CheckboxSelectMultiple,

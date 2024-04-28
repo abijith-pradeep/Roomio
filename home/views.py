@@ -1,9 +1,11 @@
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
+from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from .models import Interest
-from django.contrib.auth.decorators import login_required
+from .forms import InterestForm
+
+
 
 from add_post.models import ApartmentBuilding, ApartmentUnit, PetPolicy
 from user_profile.models import Pet
@@ -67,8 +69,25 @@ def unit_details(request, unit_id):
                 'monthly_fee': pet_policy.monthly_fee
             })
 
+    other_interests = Interest.objects.filter(unit=unit).exclude(user=request.user)
+
     context = {
         'unit': unit,
-        'pet_policies': pet_policies
+        'pet_policies': pet_policies,
+        'other_interests': other_interests
     }
     return render(request, 'home/unit_detail.html', context)
+
+
+def create_interest(request, unit_id):
+    if request.method == 'POST':
+        form = InterestForm(request.POST)
+        if form.is_valid():
+            interest = form.save(commit=False)
+            interest.user_id = request.user.id
+            interest.unit_id = unit_id
+            interest.save()
+            return redirect('home:home')  # Redirect to the home page after successfully creating the interest
+    else:
+        form = InterestForm()
+    return render(request, 'home/create_interest.html', {'form': form})

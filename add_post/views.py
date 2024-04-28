@@ -1,11 +1,11 @@
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
-from .forms import InterestForm
+from .forms import Add_Post_Form
 from .models import ApartmentBuilding, ApartmentUnit
 # Create your views here.
 
 def home_page(request):
-    form = InterestForm()
+    form = Add_Post_Form()
     context = {
             "interestForm": form,
         }
@@ -23,7 +23,7 @@ def get_buildings(request):
 
 def add_interest(request):
     if request.method == 'POST':
-        form = InterestForm(request.POST)
+        form = Add_Post_Form(request.POST)
         if form.is_valid():
             interest = form.save(commit=False)
             if form.cleaned_data['new_company_name'] and form.cleaned_data['new_building_name']:
@@ -53,5 +53,5 @@ def add_interest(request):
             form.save_m2m()  
             return redirect('home:home')
     else:
-        form = InterestForm()
+        form = Add_Post_Form()
     return render(request, 'add_post/add_post_page.html', {'form': form})
