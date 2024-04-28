@@ -10,6 +10,7 @@ class Interest(models.Model):
     move_in_date = models.DateField()
     likes = models.ManyToManyField(User, related_name='liked_interests', blank=True)
     dislikes = models.ManyToManyField(User, related_name='disliked_interests', blank=True)
+    total_likes = 0
 
     def like(self):
         self.total_likes += 1
