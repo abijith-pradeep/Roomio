@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from .models import Interest
 from .forms import InterestForm
-
+from django.views.decorators.http import require_POST
 
 
 from add_post.models import ApartmentBuilding, ApartmentUnit, PetPolicy
@@ -24,12 +24,15 @@ def home_page(request):
         return redirect("login:login")
 
 
-def like_interest(request):
-    interest_id = request.POST.get('interest_id')
+@require_POST
+def toggle_favourite(request, interest_id):
+    data = json.loads(request.body)
     try:
         interest = Interest.objects.get(id=interest_id)
-        interest.like()  # Calls the like method to increment the like count
-        return JsonResponse({'status': 'success', 'total_likes': interest.total_likes})
+        # Toggle the favourite status
+        interest.is_favourited = not interest.is_favourited
+        interest.save()
+        return JsonResponse({'status': 'success', 'is_favourited': interest.is_favourited})
     except Interest.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Interest not found'}, status=404)
 
