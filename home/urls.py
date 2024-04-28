@@ -10,4 +10,6 @@ urlpatterns = [
     path('unit/<str:unit_id>/', views.unit_details, name='view_detail'),
     path("interests/<int:interest_id>/like/", views.toggle_favourite, name='toggle_favourite'),  
     path("unit/<str:unit_id>/create_interest/", views.create_interest, name="create_interest"),
+    path('toggle_favorite/<int:unitId>/', views.toggle_favourite, name='toggle_favorite'),
+    path("favorite/", views.favorite_list, name="favorite_page")
 ]

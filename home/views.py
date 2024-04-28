@@ -1,8 +1,9 @@
+import json
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import Interest
+from .models import Favorite, Interest
 from .forms import InterestForm
 from django.views.decorators.http import require_POST
 
@@ -16,25 +17,41 @@ from .models import Interest  # Adjust the import path based on your project str
 
 
 def home_page(request):
-    if request.user.is_authenticated:
-        interests = Interest.objects.all()  # Fetch all user interests
-        return render(request, 'home/home_page.html', {'interests': interests})
-
-    else:
+    if not request.user.is_authenticated:
         return redirect("login:login")
+    
+    units = ApartmentUnit.objects.all()
+    favorites = Favorite.objects.filter(user=request.user).values_list('unit_id', flat=True)
+    
+    # Include favorite status in the units
+    units_data = [{
+        'unit': unit,
+        'is_favourited': unit.id in favorites
+    } for unit in units]
 
+    return render(request, 'home/home_page.html', {'units_data': units_data})
 
-@require_POST
-def toggle_favourite(request, interest_id):
-    data = json.loads(request.body)
+def toggle_favourite(request, unitId):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status': 'error', 'message': 'Unauthorized'}, status=403)
+    
     try:
-        interest = Interest.objects.get(id=interest_id)
-        # Toggle the favourite status
-        interest.is_favourited = not interest.is_favourited
-        interest.save()
-        return JsonResponse({'status': 'success', 'is_favourited': interest.is_favourited})
-    except Interest.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Interest not found'}, status=404)
+        unit = get_object_or_404(ApartmentUnit, id=unitId)
+        # Check if the current user has already favorited this unit
+        favorite, created = Favorite.objects.get_or_create(user=request.user, unit=unit)
+
+        if not created:
+            # If the favorite already exists, it means we are unfavouriting
+            favorite.delete()
+            is_favourited = False
+        else:
+            # If we just created the favorite, it means we are favouriting
+            is_favourited = True
+
+        return JsonResponse({'status': 'success', 'is_favourited': is_favourited})
+    except ApartmentUnit.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Unit not found'}, status=404)
+
 
 def logout(request):
     # Clear Django session data
@@ -84,3 +101,11 @@ def create_interest(request, unit_id):
     else:
         form = InterestForm()
     return render(request, 'home/create_interest.html', {'form': form})
+
+def favorite_list(request):
+    if not request.user.is_authenticated:
+        return redirect('login:login')
+    
+    favorites = Favorite.objects.filter(user=request.user)
+    
+    return render(request, 'home/favorite_page.html', {'favorites': favorites})

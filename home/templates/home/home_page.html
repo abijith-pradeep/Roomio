@@ -7,27 +7,26 @@
 <div class="container mt-4">
     <h1>Available Units</h1>
     <div class="row">
-        {% for interest in interests %}
+        {% for item in units_data %}
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title"></h5>
                     <p class="card-text">
-                        gitUnit: {{ interest.unit.unit_number }}<br>
-                        Address: {{ interest.unit.building.address_number }} {{ interest.unit.building.address_street }}, {{ interest.unit.building.address_city }}, {{ interest.unit.building.address_state }} {{ interest.unit.building.address_zip_code }}<br>
-                        Monthly Rent: ${{ interest.unit.monthly_rent }}<br>
-                        Square Footage: {{ interest.unit.square_footage }} sqft<br>
-                        Available Date for Move-In: {{ interest.unit.available_date_for_move_in }}<br>
+                        Unit: {{ item.unit.unit_number }}<br>
+                        Address: {{ item.unit.building.address_number }} {{ item.unit.building.address_street }}, {{ item.unit.building.address_city }}, {{ item.unit.building.address_state }} {{ item.unit.building.address_zip_code }}<br>
+                        Monthly Rent: ${{ item.unit.monthly_rent }}<br>
+                        Square Footage: {{ item.unit.square_footage }} sqft<br>
+                        Available Date for Move-In: {{ item.unit.available_date_for_move_in }}<br>
                     </p>
-                    <button class="btn btn-success like-btn" 
-                        data-interest="{{ interest.id }}" 
-                        id="favourite-btn-{{ interest.id }}"
-                        onclick="toggleFavourite({{ interest.id }}, this)">
-                        {{ interest.is_favourited|yesno:"Unfavourite,Favourite" }}
+                    {% csrf_token %}
+                    <button class="btn {{ item.is_favourited|yesno:'btn-danger,btn-success' }}" 
+                        data-interest="{{ item.interest.id }}" 
+                        id="favourite-btn-{{ item.interest.id }}"
+                        onclick="toggleFavourite({{ item.unit.id }}, this)">
+                        {{ item.is_favourited|yesno:"Unfavourite,Favourite" }}
                     </button>
-                    <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' interest.unit.id %}'">More Details</button>
-
-
+                    <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' item.unit.id %}'">More Details</button>
 
                 </div>
             </div>
@@ -39,15 +38,20 @@
 </div>
 
 <script>
-function toggleFavourite(interestId, element) {
+    function getCsrfToken() {
+    const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+    return csrfInput ? csrfInput.value : '';
+}
+
+function toggleFavourite(unitId, element) {
     const isCurrentlyFavourited = element.textContent.trim() === "Unfavourite";
-    fetch(`/toggle_favourite/${interestId}/`, {  // Adjust the URL as needed
+    fetch(`toggle_favorite/${unitId}/`, {
         method: 'POST',
         headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'X-CSRFToken': getCsrfToken(),
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({'interest_id': interestId, 'favourited': !isCurrentlyFavourited})
+        body: JSON.stringify({'interest_id': unitId, 'favourited': !isCurrentlyFavourited})
     })
     .then(response => response.json())
     .then(data => {
@@ -62,7 +66,8 @@ function toggleFavourite(interestId, element) {
         alert('An error occurred: ' + error.message);
     });
 }
-</script>
+
+    </script>
 {% endblock %}
 
 
