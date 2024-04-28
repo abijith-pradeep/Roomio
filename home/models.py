@@ -11,8 +11,9 @@ class Interest(models.Model):
     likes = models.ManyToManyField(User, related_name='liked_interests', blank=True)
     dislikes = models.ManyToManyField(User, related_name='disliked_interests', blank=True)
 
-    def total_likes(self):
-        return self.likes.count()
+    def like(self):
+        self.total_likes += 1
+        self.save()
 
     def total_dislikes(self):
         return self.dislikes.count()
