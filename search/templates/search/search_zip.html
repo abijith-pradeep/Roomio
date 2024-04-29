@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_class %}background{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Search for Average Rent</h1>
+    <form method="post" class="mb-4">
+        {% csrf_token %}
+        <div id="search_bar">
+            {{ SearchZipForm.as_p }}
+        </div>
+        <input type="submit" value="Search" class="btn btn-primary">
+    </form>
+
+    {% if average_rent is not None %}
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Average Monthly Rent</h4>
+            <p>The average monthly rent for the selected criteria is <strong>${{ average_rent|floatformat:2 }}</strong>.</p>
+        </div>
+    {% else %}
+        <p>Please fill out the search criteria to see the average rent by Zip code</p>
+    {% endif %}
+    <p>All rentals calculated are grouped by room count and bathroom count.</p>
+</div>
+{% endblock %}

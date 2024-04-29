@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Favoriite Units</h1>
+    <h1>Favorite Units</h1>
     <div class="row">
         {% for favorite in favorites %}
         <div class="col-md-6 col-lg-4 mb-4">
@@ -34,7 +34,7 @@
             </div>
         </div>
         {% empty %}
-        <p>No favoritess found.</p>
+        <p>No favorites found.</p>
         {% endfor %}
     </div>
 </div>
@@ -45,37 +45,29 @@
         return csrfInput ? csrfInput.value : '';
     }
 
-    function toggleFavourite(interestId, element) {
-        const isCurrentlyFavourited = element.textContent.trim() === "Unfavourite";
-        // Prepare the base URL from a template and replace a placeholder with the actual interestId
-        const baseUrl = `{% url 'home:toggle_favourite' 9999 %}`; // Use a clearly invalid ID that you can replace
-        const url = baseUrl.replace('9999', interestId);
-        
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCsrfToken(),
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({'interest_id': interestId, 'favourited': !isCurrentlyFavourited})
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status == 'success') {
-                element.textContent = data.is_favourited ? "Favourite" : "Unfavourite";
-                // Optionally, remove the card if unfavourited
-                if (!data.is_favourited) {
-                    element.closest('.col-md-6').remove();
-                }
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred: ' + error.message);
-        });
-    }
+    function toggleFavourite(unitId, element) {
+    const isCurrentlyFavourited = element.textContent.trim() === "Unfavourite";
+    fetch(`toggle_favorite/${unitId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCsrfToken(),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({'interest_id': unitId, 'favourited': !isCurrentlyFavourited})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            element.textContent = data.is_favourited ? "Unfavourite" : "Favourite";
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('An error occurred: ' + error.message);
+    });
+}
 </script>
 
 
