@@ -8,4 +8,4 @@ class SearchForm(forms.Form):
 class SearchZipRoomForm(forms.Form):
     zip_code = forms.CharField(max_length=10, required=False, label='Zip Code')
     rooms = forms.IntegerField(initial=1, required=True, label='Number of Bedrooms')
-    bathrooms = forms.IntegerField(initial=1,required=True, label='Number of Bedrooms')
+    bathrooms = forms.IntegerField(initial=1,required=True, label='Number of Bathrooms')

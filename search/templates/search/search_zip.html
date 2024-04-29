@@ -8,7 +8,7 @@
     <form method="post" class="mb-4">
         {% csrf_token %}
         <div id="search_bar">
-            {{ SearchZipForm.as_p }}
+            {{ searchZipForm.as_p }}
         </div>
         <input type="submit" value="Search" class="btn btn-primary">
     </form>
