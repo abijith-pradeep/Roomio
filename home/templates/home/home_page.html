@@ -16,6 +16,8 @@
                     <h5 class="card-title"></h5>
                     <p class="card-text">
                         Unit: {{ item.unit.unit_number }}<br>
+                        Company Name: {{ item.unit.building.company_name }}<br>
+                        Building Name: {{ item.unit.building.building_name }}<br>
                         Address: {{ item.unit.building.address_number }} {{ item.unit.building.address_street }}, {{ item.unit.building.address_city }}, {{ item.unit.building.address_state }} {{ item.unit.building.address_zip_code }}<br>
                         Monthly Rent: ${{ item.unit.monthly_rent }}<br>
                         Square Footage: {{ item.unit.square_footage }} sqft<br>

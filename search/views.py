@@ -1,4 +1,5 @@
 # roomio/search/views.py
+from django.db import connection
 from django.shortcuts import render
 
 from home.models import Favorite
@@ -51,37 +52,40 @@ def search_zip(request):
 
         raw_query = f"""
         SELECT AVG(au.monthly_rent) AS average_rent
-        FROM apartment_unit AS au
-        JOIN apartment_building AS ab ON au.building_id = ab.id
+        FROM add_post_apartmentunit AS au
+        JOIN add_post_apartmentbuilding AS ab ON au.building_id = ab.id
         JOIN (
             SELECT unit_id, 
-                SUM(CASE WHEN name = 'bedroom' THEN 1 ELSE 0 END) AS bedroom_count,
-                SUM(CASE WHEN name = 'bathroom' THEN 1 ELSE 0 END) AS bathroom_count
-            FROM room
+                SUM(CASE WHEN name LIKE 'bedroom' THEN 1 ELSE 0 END) AS bedroom_count,
+                SUM(CASE WHEN name LIKE 'bathroom' THEN 1 ELSE 0 END) AS bathroom_count
+            FROM add_post_room
             GROUP BY unit_id
-            HAVING SUM(CASE WHEN name = 'bedroom' THEN 1 ELSE 0 END) = %s
-            AND SUM(CASE WHEN name = 'bathroom' THEN 1 ELSE 0 END) = %s
+            HAVING SUM(CASE WHEN name LIKE 'bedroom' THEN 1 ELSE 0 END) = %s
+            AND SUM(CASE WHEN name LIKE 'bathroom' THEN 1 ELSE 0 END) = %s
             ) AS rooms ON rooms.unit_id = au.id
         WHERE ab.address_zip_code LIKE %s;
         """
 
         with connection.cursor() as cursor:
-            cursor.execute(raw_query, [bedroom + '%', bathroom + '%', zip_code + '%', rooms])
+            cursor.execute(raw_query, [str(bedrooms) , str(bathrooms) , str(zip_code)])
             result = cursor.fetchall()
 
+        units = result
+        print(type(units[0][0]))
         # Create a list of units with favorite status
         favorites = Favorite.objects.filter(user=request.user).values_list('unit_id', flat=True)
-
+        
         # Create a list of units with favorite status
-        units_data = [{
-            'unit': unit,
-            'is_favourited': unit.id in favorites
-        } for unit in units]
+        if units:
+            units_data = [{
+                'unit': unit,
+                'is_favourited': unit in favorites
+            } for unit in units]
 
-        context = {
-            "searchZipForm": form,
-            "units_data": units_data  # Pass units data with favorite status
-        }
+            context = {
+                "searchZipForm": form,
+                "units_data": units_data  # Pass units data with favorite status
+            }
     else:
         context = {
             "searchZipForm": form,

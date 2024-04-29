@@ -23,6 +23,8 @@
                     <div class="card-body">
                         <h5 class="card-title">Unit Number: {{ item.unit.unit_number }}</h5>
                         <p class="card-text">
+                            Company Name: {{ item.unit.building.company_name }}<br>
+                            Building Name: {{ item.unit.building.building_name }}<br>
                             Address: {{ item.unit.building.address_number }} {{ item.unit.building.address_street }},
                             {{ item.unit.building.address_city }}, {{ item.unit.building.address_state }}
                             {{ item.unit.building.address_zip_code }}
