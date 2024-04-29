@@ -1,3 +1,5 @@
+# roomio/home/views.py
+
 import json
 from django.shortcuts import redirect, render
 from django.contrib import messages
@@ -31,26 +33,28 @@ def home_page(request):
 
     return render(request, 'home/home_page.html', {'units_data': units_data})
 
+
 def toggle_favourite(request, unitId):
     if not request.user.is_authenticated:
         return JsonResponse({'status': 'error', 'message': 'Unauthorized'}, status=403)
     
     try:
         unit = get_object_or_404(ApartmentUnit, id=unitId)
-        # Check if the current user has already favorited this unit
         favorite, created = Favorite.objects.get_or_create(user=request.user, unit=unit)
 
         if not created:
-            # If the favorite already exists, it means we are unfavouriting
+            # If the favorite exists, we are unfavouriting
             favorite.delete()
             is_favourited = False
         else:
-            # If we just created the favorite, it means we are favouriting
+            # Favoriting since the favorite was newly created
             is_favourited = True
 
         return JsonResponse({'status': 'success', 'is_favourited': is_favourited})
     except ApartmentUnit.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Unit not found'}, status=404)
+
+
 
 
 def logout(request):
@@ -105,7 +109,14 @@ def create_interest(request, unit_id):
 def favorite_list(request):
     if not request.user.is_authenticated:
         return redirect('login:login')
-    
-    favorites = Favorite.objects.filter(user=request.user)
-    
-    return render(request, 'home/favorite_page.html', {'favorites': favorites})
+
+    # Using select_related to fetch related unit and building data
+    favorites = Favorite.objects.filter(user=request.user).select_related('unit__building')
+
+    # Collecting favorited unit IDs for conditional rendering in the template
+    favorite_unit_ids = [fav.unit.id for fav in favorites]
+
+    return render(request, 'home/favorite_page.html', {
+        'favorites': favorites,
+        'favorite_unit_ids': favorite_unit_ids
+    })

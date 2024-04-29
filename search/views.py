@@ -1,4 +1,4 @@
-
+# roomio/search/views.py
 from django.shortcuts import render
 
 from home.models import Favorite

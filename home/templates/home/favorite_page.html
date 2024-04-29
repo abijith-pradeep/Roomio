@@ -1,3 +1,5 @@
+<!-- roomio/home/template/favorite_page.html -->
+
 {% extends 'base.html' %}
 
 {% load static %}
@@ -11,25 +13,25 @@
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title"></h5>
+                    <h5 class="card-title">Unit {{ favorite.unit.unit_number }}</h5>
                     <p class="card-text">
-                        Unit: {{ favorite.unit.unit_number }}<br>
-                        Address: {{ favorite.unit.building.address_number }} {{ favorite.unit.building.address_street }}, {{ favorite.unit.building.address_city }}, {{ favorite.unit.building.address_state }} {{ favorite.unit.building.address_zip_code }}<br>
+                        Address: {{ favorite.unit.building.address_number }} {{ favorite.unit.building.address_street }},
+                        {{ favorite.unit.building.address_city }}, {{ favorite.unit.building.address_state }}
+                        {{ favorite.unit.building.address_zip_code }}<br>
                         Monthly Rent: ${{ favorite.unit.monthly_rent }}<br>
                         Square Footage: {{ favorite.unit.square_footage }} sqft<br>
-                        Available Date for Move-In: {{ favorite.unit.available_date_for_move_in }}<br>
+                        Available Date for Move-In: {{ favorite.unit.available_date_for_move_in|date:"Y-m-d" }}<br>
                     </p>
                     {% csrf_token %}
-                    <button class="btn btn-danger like-btn" 
+                    <button class="btn {% if favorite.unit.id in favorite_unit_ids %}btn-danger{% else %}btn-success{% endif %}" 
                         data-interest="{{ favorite.unit.id }}" 
-                        id="unfavourite-btn-{{ favorite.uni.id }}"
+                        id="favourite-btn-{{ favorite.unit.id }}"
                         onclick="toggleFavourite({{ favorite.unit.id }}, this)">
-                        Unfavourite
+                        {% if favorite.unit.id in favorite_unit_ids %}Unfavourite{% else %}Favourite{% endif %}
                     </button>
-                    <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' favorite.unit.id %}'">More Details</button>
-
-
-
+                    <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' favorite.unit.id %}'">
+                        More Details
+                    </button>
                 </div>
             </div>
         </div>
@@ -58,7 +60,15 @@
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            element.textContent = data.is_favourited ? "Unfavourite" : "Favourite";
+            if(data.is_favourited) {
+                element.textContent = "Unfavourite";
+                element.classList.remove('btn-success');
+                element.classList.add('btn-danger');
+            } else {
+                element.textContent = "Favourite";
+                element.classList.remove('btn-danger');
+                element.classList.add('btn-success');
+            }
         } else {
             alert('Error: ' + data.message);
         }
