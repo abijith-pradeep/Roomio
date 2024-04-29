@@ -30,13 +30,12 @@
                             <br>Square Footage: {{ item.unit.square_footage }} sqft
                             <br>Available Date for Move-In: {{ item.unit.available_date_for_move_in|date:"F j, Y" }}
                         </p>
-                        <button class="btn {{ item.is_favourited|yesno:'btn-danger,btn-success' }}"
-                            data-interest="{{ item.unit.id }}" 
-                            data-url="{% url 'home:toggle_favorite' item.unit.id %}"
-                            id="favourite-btn-{{ item.unit.id }}"
-                            onclick="toggleFavourite(this, '{{ item.unit.id }}')">
-                        {{ item.is_favourited|yesno:"Unfavourite,Favourite" }}
-                    </button>
+                        <button class="btn {{ item.is_favourited|yesno:'btn-danger,btn-success' }}" 
+                                data-interest="{{ item.unit.id }}" 
+                                id="favourite-btn-{{ item.unit.id }}"
+                                onclick="toggleFavourite(this)">
+                            {{ item.is_favourited|yesno:"Unfavourite,Favourite" }}
+                        </button>
                         <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' item.unit.id %}'">
                             More Details
                         </button>
@@ -58,31 +57,31 @@
         return document.querySelector('[name=csrfmiddlewaretoken]').value;
     }
 
-    function toggleFavourite( element) {
-
-        const unitId = element.getAttribute('data-url');
-        const isCurrentlyFavourited = element.textContent.trim() === "Unfavourite";
-        fetch(unitId, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCsrfToken(),
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({'interest_id': unitId, 'favourited': !isCurrentlyFavourited})
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                element.textContent = data.is_favourited ? "Unfavourite" : "Favourite";
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            alert('An error occurred: ' + error.message);
-        });
-    }
-
-    </script>
-    {% endblock %}
+    function toggleFavourite(element) {
+    const unitId = element.getAttribute('data-interest');
+    const isCurrentlyFavourited = element.textContent.trim() === "Unfavourite";
+    fetch(`/home/favorite/toggle_favorite/${unitId}/`, {  // Ensure URL is correct
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCsrfToken(),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({'interest_id': unitId, 'favourited': !isCurrentlyFavourited})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            element.textContent = data.is_favourited ? "Unfavourite" : "Favourite";
+            element.classList.toggle('btn-danger');
+            element.classList.toggle('btn-success');
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('An error occurred: ' + error.message);
+    });
+}
+</script>
+{% endblock %}
