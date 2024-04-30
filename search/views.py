@@ -1,12 +1,15 @@
 # roomio/search/views.py
 from django.db import connection
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from home.models import Favorite
 from .forms import SearchForm, SearchZipRoomForm, InterestSearchForm
 from add_post.models import ApartmentUnit, ApartmentBuilding
 
 def search_home(request):
+    if not request.user.is_authenticated:
+        return redirect("login:login")
+    
     form = SearchForm(request.POST or None)
     units_data = []
 
@@ -73,6 +76,9 @@ def search_home(request):
     return render(request, 'search/search_page.html', context)
 
 def search_interest(request):
+    if not request.user.is_authenticated:
+        return redirect("login:login")
+    
     form = InterestSearchForm(request.POST or None)
     interests_data = []
 
@@ -139,6 +145,9 @@ def search_interest(request):
 
 
 def search_zip(request):
+    if not request.user.is_authenticated:
+        return redirect("login:login")
+    
     form = SearchZipRoomForm(request.POST or None)
     units_data = []
 
@@ -147,21 +156,6 @@ def search_zip(request):
         bedrooms = form.cleaned_data.get('rooms', 1)
         bathrooms = form.cleaned_data.get('bathrooms',1)
 
-#         raw_query = f"""
-#         SELECT AVG(au.monthly_rent) AS average_rent
-#         FROM add_post_apartmentunit AS au
-#         JOIN add_post_apartmentbuilding AS ab ON au.building_id = ab.id
-#         JOIN (
-#     SELECT unit_id, 
-#         SUM(CASE WHEN name LIKE 'bedroom%%' THEN 1 ELSE 0 END) AS bedroom_count,
-#         SUM(CASE WHEN name LIKE 'bathroom%%' THEN 1 ELSE 0 END) AS bathroom_count
-#     FROM add_post_room
-#     GROUP BY unit_id
-#     HAVING bedroom_count = %s AND bathroom_count = %s
-# ) AS rooms ON rooms.unit_id = au.id
-# WHERE ab.address_zip_code LIKE %s;
-
-#         """
 
         raw_query = """
             SELECT AVG(au.monthly_rent) AS average_rent
@@ -184,14 +178,13 @@ def search_zip(request):
             cursor.execute(raw_query, [bedrooms, bathrooms, f'%{zip_code}%'])
             # cursor.execute(raw_query, [1, 1, 14287])
             units = cursor.fetchall()
-            print(units)
 
             # Get list of unit IDs that are favorited by the user
             cursor.execute("SELECT unit_id FROM home_favorite WHERE user_id = %s", [request.user.id])
             favorites = cursor.fetchall()
             favorite_ids = [item[0] for item in favorites]
 
-        # Create a list of units with favorite status
+        # Creating a list of units with favorite status
         units_data = [{
             'unit': {
                 'average_rent': unit[0],

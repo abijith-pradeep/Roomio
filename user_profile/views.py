@@ -7,17 +7,21 @@ from django.db import IntegrityError
 from django.contrib import messages
 
 def userprofile(request):
-    if request.user.is_authenticated:
-        pets = Pet.objects.filter(owner=request.user)
-        context = {
-            'user': request.user,
-            'pets': pets
-        }
-        return render(request,"user_profile/user_profile.html",context)
+    if not request.user.is_authenticated:
+        return redirect("login:login")
+    
+    pets = Pet.objects.filter(owner=request.user)
+    context = {
+        'user': request.user,
+        'pets': pets
+    }
+    return render(request,"user_profile/user_profile.html",context)
 
 
-@login_required
 def register_pet(request):
+    if not request.user.is_authenticated:
+        return redirect("login:login")
+
     if request.method == 'POST':
         if request.user.is_authenticated:
             form = PetForm(request.POST)
@@ -43,8 +47,11 @@ def register_pet(request):
         form = PetForm()
     return render(request, 'user_profile/register_pet.html', {'form': form})
 
-@login_required
+
 def edit_pet(request, pet_id):
+    if not request.user.is_authenticated:
+        return redirect("login:login")
+    
     pet = Pet.objects.get(id=pet_id, owner=request.user)  # ensure user can only edit their own pets
     if request.method == 'POST':
         form = PetForm(request.POST, instance=pet)
