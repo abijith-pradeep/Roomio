@@ -99,29 +99,32 @@ def search_zip(request):
             HAVING SUM(CASE WHEN name LIKE 'bedroom' THEN 1 ELSE 0 END) = %s
             AND SUM(CASE WHEN name LIKE 'bathroom' THEN 1 ELSE 0 END) = %s
             ) AS rooms ON rooms.unit_id = au.id
-        WHERE ab.address_zip_code LIKE %s;
+        WHERE ab.address_zip_code LIKE %s
+        GROUP BY ab.address_zip_code;
         """
 
         with connection.cursor() as cursor:
-            cursor.execute(raw_query, [str(bedrooms) , str(bathrooms) , str(zip_code)])
-            result = cursor.fetchall()
+            cursor.execute(raw_query, [bedrooms, bathrooms, zip_code])
+            units = cursor.fetchall()
+            print(units)
 
-        units = result
-        print(type(units[0][0]))
-        # Create a list of units with favorite status
-        favorites = Favorite.objects.filter(user=request.user).values_list('unit_id', flat=True)
-        
-        # Create a list of units with favorite status
-        if units:
-            units_data = [{
-                'unit': unit,
-                'is_favourited': unit in favorites
-            } for unit in units]
+            # Get list of unit IDs that are favorited by the user
+            cursor.execute("SELECT unit_id FROM home_favorite WHERE user_id = %s", [request.user.id])
+            favorites = cursor.fetchall()
+            favorite_ids = [item[0] for item in favorites]
 
-            context = {
-                "searchZipForm": form,
-                "units_data": units_data  # Pass units data with favorite status
-            }
+        # Create a list of units with favorite status
+        units_data = [{
+            'unit': {
+                'average_rent': unit[0],
+            },
+            'is_favourited': unit[0] in favorite_ids
+        } for unit in units]
+
+        context = {
+            "searchZipForm": form,
+            "units_data": units_data
+        }
     else:
         context = {
             "searchZipForm": form,
