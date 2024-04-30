@@ -30,9 +30,6 @@ def search_home(request):
             WHERE ab.company_name LIKE %s AND ab.building_name LIKE %s;
         """
 
-       
-
-
         with connection.cursor() as cursor:
             cursor.execute(raw_query, [company_name, building_name])
             units = cursor.fetchall()
@@ -66,16 +63,7 @@ def search_home(request):
         } for unit in units]
 
         
-        # units_data = [{
-        #     'unit': {
-        #         'id': unit[0],
-        #         'unit_number': unit[1],
-        #         'monthly_rent': unit[2],
-        #         'square_footage': unit[3],
-        #         'available_date_for_move_in': unit[4],
-        #     },
-        #     'is_favourited': unit[0] in favorite_ids
-        # } for unit in units]
+
 
         context = {
             "searchForm": form,

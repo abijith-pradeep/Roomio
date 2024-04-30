@@ -13,16 +13,16 @@
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Unit {{ favorite.unit.unit_number }}</h5>
+                    <h5 class="card-title">Unit {{ favorite.unit_number }}</h5>
                     <p class="card-text">
-                        Company Name: {{ favorite.unit.building.company_name }}<br>
-                        Building Name: {{ favorite.unit.building.building_name }}<br>
-                        Address: {{ favorite.unit.building.address_number }} {{ favorite.unit.building.address_street }},
-                        {{ favorite.unit.building.address_city }}, {{ favorite.unit.building.address_state }}
-                        {{ favorite.unit.building.address_zip_code }}<br>
-                        Monthly Rent: ${{ favorite.unit.monthly_rent }}<br>
-                        Square Footage: {{ favorite.unit.square_footage }} sqft<br>
-                        Available Date for Move-In: {{ favorite.unit.available_date_for_move_in|date:"Y-m-d" }}<br>
+                        Company Name: {{ favorite.building.company_name }}<br>
+                        Building Name: {{ favorite.building.building_name }}<br>
+                        Address: {{ favorite.building.address_number }} {{ favorite.building.address_street }},
+                        {{ favorite.building.address_city }}, {{ favorite.building.address_state }}
+                        {{ favorite.building.address_zip_code }}<br>
+                        Monthly Rent: ${{ favorite.monthly_rent }}<br>
+                        Square Footage: {{ favorite.square_footage }} sqft<br>
+                        Available Date for Move-In: {{ favorite.available_date_for_move_in|date:"Y-m-d" }}<br>
                     </p>
                     {% csrf_token %}
                     <button class="btn {% if favorite.unit.id in favorite_unit_ids %}btn-danger{% else %}btn-success{% endif %}" 
@@ -31,7 +31,7 @@
                         onclick="toggleFavourite({{ favorite.unit.id }}, this)">
                         {% if favorite.unit.id in favorite_unit_ids %}Unfavourite{% else %}Favourite{% endif %}
                     </button>
-                    <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' favorite.unit.id %}'">
+                    <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' favorite.unit_id %}'">
                         More Details
                     </button>
                 </div>
