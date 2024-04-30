@@ -8,35 +8,48 @@ from add_post.models import ApartmentUnit, ApartmentBuilding
 
 def search_home(request):
     form = SearchForm(request.POST or None)
-    units = []
+    units_data = []
 
     if request.method == 'POST' and form.is_valid():
         company_name = form.cleaned_data['company_name']
         building_name = form.cleaned_data['building_name']
 
-        # Filter apartment units based on building and company name
-        units = ApartmentUnit.objects.filter(
-            building__company_name=company_name,
-            building__building_name=building_name
-        )
+        raw_query = """
+        SELECT au.id, au.unit_number, au.monthly_rent, au.square_footage, au.available_date_for_move_in
+        FROM add_post_apartmentunit AS au
+        JOIN add_post_apartmentbuilding AS ab ON au.building_id = ab.id
+        WHERE ab.company_name LIKE %s AND ab.building_name LIKE %s;
+        """
 
-        # Get list of unit IDs that are favorited by the user
-        favorites = Favorite.objects.filter(user=request.user).values_list('unit_id', flat=True)
+        with connection.cursor() as cursor:
+            cursor.execute(raw_query, [company_name, building_name])
+            units = cursor.fetchall()
+
+            # Get list of unit IDs that are favorited by the user
+            cursor.execute("SELECT unit_id FROM home_favorite WHERE user_id = %s", [request.user.id])
+            favorites = cursor.fetchall()
+            favorite_ids = [item[0] for item in favorites]
 
         # Create a list of units with favorite status
         units_data = [{
-            'unit': unit,
-            'is_favourited': unit.id in favorites
+            'unit': {
+                'id': unit[0],
+                'unit_number': unit[1],
+                'monthly_rent': unit[2],
+                'square_footage': unit[3],
+                'available_date_for_move_in': unit[4],
+            },
+            'is_favourited': unit[0] in favorite_ids
         } for unit in units]
 
         context = {
             "searchForm": form,
-            "units_data": units_data  # Pass units data with favorite status
+            "units_data": units_data
         }
     else:
         context = {
             "searchForm": form,
-            "units_data": []  # Ensure units_data is always defined
+            "units_data": []
         }
 
     return render(request, 'search/search_page.html', context)
