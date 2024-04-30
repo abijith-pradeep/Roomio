@@ -1,4 +1,4 @@
-# roomio/home/views.py
+
 
 import json
 from django.db import connection
@@ -69,7 +69,8 @@ def home_page(request):
 
 def toggle_favourite(request, unitId):
     if not request.user.is_authenticated:
-        return JsonResponse({'status': 'error', 'message': 'Unauthorized'}, status=403)
+        return redirect("login:login")
+        # return JsonResponse({'status': 'error', 'message': 'Unauthorized'}, status=403)
 
     with connection.cursor() as cursor:
         cursor.execute("SELECT id FROM add_post_apartmentunit WHERE id = %s", [unitId])
