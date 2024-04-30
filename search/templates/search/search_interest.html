@@ -5,32 +5,27 @@
 {% block body_class %}background{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1>Search Apartment Units</h1>
-    <form method="post" class="mb-4">
+<div class="container">
+    <h1>Search for Interests</h1>
+    <form method="post">
         {% csrf_token %}
-        <div id="search_bar">
-            {{ searchForm.as_p }}
-        </div>
-        <input type="submit" value="Search" class="btn btn-primary">
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Search</button>
     </form>
 
-    {% if units_data %}
+    {% if interests_data %}
     <div class="row">
-        {% for item in units_data %}
+        {% for item in interests_data %}
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Unit Number: {{ item.unit.unit_number }}</h5>
+                        <h5 class="card-title">Unit Number: {{ item.unit_number }}</h5>
                         <p class="card-text">
-                            Company Name: {{ item.unit.building.company_name }}<br>
-                            Building Name: {{ item.unit.building.building_name }}<br>
-                            Address: {{ item.unit.building.address_number }} {{ item.unit.building.address_street }},
-                            {{ item.unit.building.address_city }}, {{ item.unit.building.address_state }}
-                            {{ item.unit.building.address_zip_code }}
-                            <br>Monthly Rent: ${{ item.unit.monthly_rent }}
-                            <br>Square Footage: {{ item.unit.square_footage }} sqft
-                            <br>Available Date for Move-In: {{ item.unit.available_date_for_move_in|date:"F j, Y" }}
+                            Building Name: {{ item.building_name }}<br>
+                            Address: {{ item.address_number }} {{ item.address_street }},
+                            {{ item.address_city }}, {{ item.address_state }}
+                            {{ item.address_zip_code }}
+                            <br>Available Date for Move-In: {{ item.move_in_date|date:"F j, Y" }}
                         </p>
                         <button class="btn {{ item.is_favourited|yesno:'btn-danger,btn-success' }}" 
                                 data-interest="{{ item.unit.id }}" 
@@ -38,7 +33,7 @@
                                 onclick="toggleFavourite(this)">
                             {{ item.is_favourited|yesno:"Unfavourite,Favourite" }}
                         </button>
-                        <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' item.unit.id %}'">
+                        <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' item.interest_id %}'">
                             More Details
                         </button>
                     </div>
@@ -48,11 +43,10 @@
             <p>No apartment units found.</p>
         {% endfor %}
         </div>
-        {% else %}
-        <p>No apartment units found.</p>
-        {% endif %}
-
- </div>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+</div>
 
  <script>
     function getCsrfToken() {

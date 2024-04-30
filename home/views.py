@@ -164,7 +164,6 @@ def unit_details(request, unit_id):
                         'monthly_fee': row[4]
                     })
 
-                print(pet_policies)
         
 
         # Fetch other interests excluding the current user
@@ -183,8 +182,6 @@ def unit_details(request, unit_id):
             'roommate_count': row[3]
         } for row in cursor.fetchall()]
 
-    print("pet policy = " , pet_policies)
-    print("other interest = " , other_interests)
     context = {
         'unit': unit,
         'pet_policies': pet_policies,
