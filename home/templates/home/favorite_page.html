@@ -25,11 +25,12 @@
                         Available Date for Move-In: {{ favorite.available_date_for_move_in|date:"Y-m-d" }}<br>
                     </p>
                     {% csrf_token %}
-                    <button class="btn {% if favorite.unit.id in favorite_unit_ids %}btn-danger{% else %}btn-success{% endif %}" 
-                        data-interest="{{ favorite.unit.id }}" 
-                        id="favourite-btn-{{ favorite.unit.id }}"
-                        onclick="toggleFavourite({{ favorite.unit.id }}, this)">
-                        {% if favorite.unit.id in favorite_unit_ids %}Unfavourite{% else %}Favourite{% endif %}
+
+                    <button class="btn {% if favorite.unit_id in favorite_unit_ids %}btn-danger{% else %}btn-success{% endif %}" 
+                        data-interest="{{ favorite.unit_id }}" 
+                        id="favourite-btn-{{ favorite.unit_id }}"
+                        onclick="toggleFavourite({{ favorite.unit_id }}, this)">
+                        {% if favorite.unit_id in favorite_unit_ids %}Unfavourite{% else %}Favourite{% endif %}
                     </button>
                     <button class="btn btn-primary" onclick="location.href='{% url 'home:view_detail' favorite.unit_id %}'">
                         More Details
