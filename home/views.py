@@ -154,8 +154,9 @@ def unit_details(request, unit_id):
                 WHERE pp.apartment_building_id = %s AND pp.pet_type LIKE %s AND pp.pet_size LIKE %s
             """, [unit['building']['id'], user_pets[i][0], user_pets[i][1]])
                 row = cursor.fetchone()
-                print(row)
+                
                 rows = cursor.fetchall()
+                # print(rows)
                 for row in rows:
                     pet_policies.append({
                         'pet_type': row[0],
