@@ -36,8 +36,8 @@ def user_signup(request):
             hashed_password = make_password(form.cleaned_data['password'])
             with connection.cursor() as cursor:
                 cursor.execute("""
-                    INSERT INTO login_user (username, first_name, last_name, email, password, dob, gender, is_active, is_staff, is_superuser, date_joined)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s)
+                    INSERT INTO login_user (username, first_name, last_name, email, password, dob, gender, is_active, is_staff, is_superuser, date_joined, phone)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s)
                 """, [
                     form.cleaned_data['username'],
                     form.cleaned_data['first_name'],
@@ -49,7 +49,8 @@ def user_signup(request):
                     "True",
                     "False",
                     "False",
-                    timezone.now()
+                    timezone.now(),
+                    form.cleaned_data['phone']
 ,                ])
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if user is not None:
