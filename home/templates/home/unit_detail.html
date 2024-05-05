@@ -22,7 +22,7 @@
 
             </p>
             <p class="card-text">
-                Pet Policy:
+                <strong>Pet Policy:</strong>
                 {% for policy in pet_policies %}
                     <br>
                     Pet Type: {{ policy.pet_type }}
@@ -34,14 +34,28 @@
                     {% endif %}
             {% endfor %}
             </p>
+            <p class="card-text">
+                <strong>Amenities:</strong>
+                {% for amenity in amenities %}
+                    <br>Type: {{ amenity.type }}
+                    <br>Description: {{ amenity.description }}
+                {% empty %}
+                    <p>No amenities found for this unit.</p>
+                {% endfor %}
+            </p>
 
-            {% for interest in other_interests %}
-            <p>Interest by: {{ interest.user.first_name }} {{ interest.user.last_name }}</p>
-            <p>Move-in Date: {{ interest.move_in_date }}</p>
-            <p>Roommate Count: {{ interest.roommate_count }}</p>
-            {% empty %}
-                <p>No other interests found for this unit.</p>
-            {% endfor %}
+            <strong>Interest:</strong>
+            <div class="card-body">
+                {% for interest in other_interests %}
+                <p class="card-text">Interest by: {{ interest.user.first_name }} {{ interest.user.last_name }}</p>
+                <p>Move-in Date: {{ interest.move_in_date }}</p>
+                <p>Roommate Count: {{ interest.roommate_count }}</p>
+                {% empty %}
+                    <p>No other interests found for this unit.</p>
+                {% endfor %}
+
+            </div>
+            
             <button class="btn btn-primary" onclick="location.href='{% url 'home:create_interest' unit.id %}'">Create Interest</button>
     </div>
 </div>

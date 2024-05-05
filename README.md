@@ -11,15 +11,24 @@ Supabase: Invited the above emails to the Supabase organization for database acc
 
  
 
-# Progress: 
+# Work history
 
-Completed Django project initialization 
-
-Integrated Supabase DB (for consistent work between team) 
-Completed on the Login page (Abijith) -> then user profile page (Abijith) 
-Started on Home page (Affan) -> shifting focus to apartment record creation form (Affan) 
-
-Note: UI still needs to be worked on 
+- Affan
+  - Worked on HomePage
+  - searching for unit based on company name and  building name 
+  - Favorite feature
+  - feature to apply min and max rent
+  - View Detail of unit along with pet policy of that apartment building
+  - View Interest and create Interest
+    
+- Abijith
+  - Did the User Login & SignUp
+  - session handling
+  - User Profile
+  - Pet Add/Edit functionality
+  - Searching apartment based on interest
+  - Getting Average value based on zip code
+  - feature to apply min and max rent filter on search
 
 
 ## Project Setup Instructions

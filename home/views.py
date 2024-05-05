@@ -184,10 +184,19 @@ def unit_details(request, unit_id):
             'roommate_count': row[3]
         } for row in cursor.fetchall()]
 
+        cursor.execute("""
+            SELECT a.type, a.description
+            FROM add_post_amenities a
+            JOIN add_post_apartmentamenities aa ON a.id = aa.amenity_id
+            WHERE aa.unit_id = %s
+        """, [unit_id])
+        amenities = [{'type': row[0], 'description': row[1]} for row in cursor.fetchall()]
+
     context = {
         'unit': unit,
         'pet_policies': pet_policies,
-        'other_interests': other_interests
+        'other_interests': other_interests,
+        'amenities': amenities
     }
     return render(request, 'home/unit_detail.html', context)
 
